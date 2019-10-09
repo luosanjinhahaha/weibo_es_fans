@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>微博搜索引擎-首页</title>
+</head>
+<body>
+<div th:replace="~{nav::commonNav}"></div>
+<div class="wrapper" style="font-size: 14px;">
+    <div class="content-wrapper">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item imgSource"><a class="nav-link active" href="javascript:void(0);" data-toggle="tab">微博详情</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="imgSource">
+                            <div th:each="weiboInfo:${weiboVAll}" class="imgItem"
+                                 style="margin-right: 8px; margin-bottom: 8px; width: 220px; border: 1px solid rgb(221, 221, 221); border-radius: 5px; padding: 10px;">
+                                <img th:src="${weiboInfo.imagePath}"
+                                     style="width: 200px;border: 1px solid rgb(221, 221, 221);">
+                                <div style="text-align: center; margin-top: 4px;font-weight: bold; color: orange" th:text="${weiboInfo.VName}"></div>
+                                <table class="" style="text-align: center">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 58px" th:text="${weiboInfo.concernAmount}"></th>
+                                        <th style="width: 58px" th:text="${weiboInfo.fansAmount}"></th>
+                                        <th style="width: 58px" th:text="${weiboInfo.lv}"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr style="width: 177px;color: #808080">
+                                        <td style="width: 58px" th:text="关注"></td>
+                                        <td style="width: 58px" th:text="粉丝"></td>
+                                        <td style="width: 58px" th:text="等级"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div style="text-align: center" th:text="'简介: ' + ${weiboInfo.VIntro}"></div>
+                                <!--<p>参考路径：-->
+                                <!--<div style="height:100px;" class="fastDFS_path_img" th:text="${weiboInfo.imagePath}"></div>-->
+                                <a th:href="@{'/getWeiboVFansByVId/' + ${weiboInfo.VId}}" th:weiboInfo-id="${weiboInfo.VId}"
+                                        class="btn btn-sm v_fans_btn"
+                                        style="position: relative;top: 4px;color: white; background: #577b93; float: right;  width: 70px;">
+                                    <span>ta的粉丝</span>
+                                </a>
+                                <!--<button th:id="${weiboInfo.id}" class="btn btn-danger btn-sm deleteImg_btn"-->
+                                <!--style="position: relative; top: 4px; left: 70px; width: 60px;"><span>删除</span>-->
+                                <!--</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $("#weiboV-search").click(function () {
+        var searchKeyWord = $(this).parent().siblings("input").val();
+        $.ajax({
+            url: "/weiboVSearch/",
+            type: "POST",
+            data: "searchKeyWord=" + searchKeyWord,
+            success: function (res) {
+                if (res.code == 200) {
+                    buildWeiboVInfo(res.extend.weiboVSearches);
+                    $('#imgSource').masonry({
+                        itemSelector: '.imgItem'
+                    });
+                }
+            }
+        });
+    });
+
+    function buildWeiboVInfo(res) {
+        $(".tab-pane").empty();
+        $.each(res, function (index, item) {
+            console.log(item);
+            var weiboInfoDiv = $("<div></div>").addClass("imgItem").css("margin-right", "8px").css("width", "220px")
+                .css("border", "1px solid rgb(221, 221, 221)").css("border-radius", "5px").css("padding", "10px")
+                .append($("<img />").prop("src", item.imagePath).css("width", "200px").css("border", "1px solid rgb(221, 221, 221)"))
+                .append($("<div></div>").css("text-align", "center").css("margin-top", "4px").css("font-weight", "bold").css("color", "orange")
+                    .append(item.vname));
+            weiboInfoDiv.appendTo(".tab-pane");
+        });
+    }
+
+    $(function () {
+        $('#imgSource').masonry({
+            itemSelector: '.imgItem'
+        });
+    });
+</script>
+</html>

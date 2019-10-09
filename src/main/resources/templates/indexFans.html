@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>微博搜索引擎-首页</title>
+</head>
+<body>
+<div th:replace="~{nav::commonNav}"></div>
+<div class="wrapper" style="font-size: 14px;">
+    <div class="content-wrapper">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item imgSource"><a class="nav-link active" href="javascript:void(0);"
+                                                          data-toggle="tab">微博详情</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="imgSource">
+                            <div th:each="weiboVFansInfo:${weiboVFansByVId}" class="imgItem"
+                                 style="margin-right: 8px; margin-bottom: 8px; width: 220px; border: 1px solid rgb(221, 221, 221); border-radius: 5px; padding: 10px;">
+                                <img th:src="${weiboVFansInfo.imagePath}"
+                                     style="width: 200px;border: 1px solid rgb(221, 221, 221);">
+                                <div style="text-align: center; margin-top: 4px;font-weight: bold; color: orange"
+                                     th:text="${weiboVFansInfo.fansName}"></div>
+                                <table class="" style="text-align: center">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 58px" th:text="${weiboVFansInfo.fansFansAmount}"></th>
+                                        <th style="width: 58px" th:text="${weiboVFansInfo.fansId}"></th>
+                                        <th style="width: 58px"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr style="width: 177px;color: #808080">
+                                        <td style="width: 58px" th:text="关注"></td>
+                                        <td style="width: 58px" th:text="微博号"></td>
+                                        <td style="width: 58px"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <!--<p>参考路径：-->
+                                <!--<div style="height:100px;" class="fastDFS_path_img" th:text="${weiboInfo.imagePath}"></div>-->
+                                <!--<button th:id="${weiboVFansInfo.id}" class="btn btn-danger btn-sm deleteImg_btn"-->
+                                <!--style="position: relative; top: 4px; left: 70px; width: 60px;"><span>删除</span>-->
+                                <!--</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $("#weiboV-search").click(function () {
+        var searchKeyWord = $(this).parent().siblings("input").val();
+        $.ajax({
+            url: "/weiboVFansSearch/",
+            type: "POST",
+            data: "searchKeyWord=" + searchKeyWord,
+            success: function (res) {
+                if (res.code == 200) {
+                    buildWeiboVInfo(res.extend.weiboVSearches);
+                    $('#imgSource').masonry({
+                        itemSelector: '.imgItem'
+                    });
+                }
+            }
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: weibo_es_fans
+  datasource:
+    username: root
+    password: lx19960430
+    url: jdbc:mysql://localhost:3306/weibo?characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+  elasticsearch:
+    jest:
+      uris: http://192.168.0.130:9200
+
+server:
+  port: 8080
+
+mybatis:
+  type-aliases-package: com.roshine.weibo_es_fans.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

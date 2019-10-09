@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roshine.weibo_es_fans.mapper.WeiboVFansMapper">
+    <select id="getWeiboVFansByVId" parameterType="string" resultType="WeiboVFans">
+        select t.* from v_fans_t t where t.v_id = #{vId} limit 10;
+    </select>
+</mapper>
